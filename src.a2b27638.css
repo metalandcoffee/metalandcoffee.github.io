@@ -1,6 +1,93 @@
 #app {
-    text-align: center;
+	text-align: center;
+	position: relative;
 }
+
+.screen-reader-text {
+	border: 0;
+	clip: rect(1px, 1px, 1px, 1px);
+	clip-path: inset(50%);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+	word-wrap: normal !important;
+}
+
+/* https://loading.io/css/ */
+#loading-container,
+#modal-loading-container {
+	position: absolute;
+	z-index: 1;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	top: 0;
+	left: 0;
+	visibility: hidden;
+}
+
+#heart-loading {
+	margin-top: 50px;
+	display: inline-block;
+	width: 80px;
+	height: 80px;
+	transform: rotate(45deg);
+	transform-origin: 40px 40px;
+}
+	#heart-loading div {
+		top: 32px;
+		left: 32px;
+		position: absolute;
+		width: 32px;
+		height: 32px;
+		background: #df6adf;
+		animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
+	}
+
+	#heart-loading div:after,
+	#heart-loading div:before {
+		content: " ";
+		position: absolute;
+		display: block;
+		width: 32px;
+		height: 32px;
+		background: #df6adf;
+	}
+
+	#heart-loading div:before {
+		left: -24px;
+		border-radius: 50% 0 0 50%;
+	}
+
+	#heart-loading div:after{
+		top: -24px;
+		border-radius: 50% 50% 0 0;
+	}
+
+@keyframes lds-heart {
+	0% {
+		transform: scale(0.95);
+	}
+	5% {
+		transform: scale(1.1);
+	}
+	39% {
+		transform: scale(0.85);
+	}
+	45% {
+		transform: scale(1);
+	}
+	60% {
+		transform: scale(0.95);
+	}
+	100% {
+		transform: scale(0.9);
+	}
+}
+  
 
 #overlay {
     background-color: rgba(0, 0, 0, 0.5);
@@ -13,8 +100,8 @@
 
 #modal {
     background: white;
-    width: 600px;
-    max-height: 90%;
+    width: 90%;
+    height: 90%;
     padding: 1rem;
     border: 2px #ccc solid;
     position: relative;
@@ -26,73 +113,59 @@
     overflow-y: scroll;
 }
 
-#modal article {
-    display: grid;
-    grid-gap: 10px;
-    padding: 10px;
-    grid-template-rows: repeat(5, auto);
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas: 'header      header'
-                         'image       image'
-                         'header1     header2'
-                         'ingredients instructions'
-                         'close       close';
-}
-
-#modal h3 {
-    grid-area: header;
-}
-
-#modal h5 {
-    margin: 0;
+#modal .img-container {
+    width: 300px;
+    height: 400px;
+    margin: 0 auto;
 }
 
 #modal img {
-    grid-area: image;
-    margin: 0 auto;
-    width: 50%;
-}
-
-#modal .ingredients-header {
-    grid-area: header1;
-}
-
-#modal .instructions-header {
-    grid-area: header2;
-}
-
-#modal .ingredients {
-    grid-area: ingredients;
-    list-style: none;
-}
-
-#modal .instructions {
-    grid-area: instructions;
-}
-
-#modal .close {
-    grid-area: close;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
 }
 
 #modal em {
     font-size: 0.8rem;
     color: var(--light);
 }
+
+#close {
+    padding: 10px;
+    height: auto;
+}
+
+#close svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+}
 .lightbox {
-    margin-bottom: 2rem;
+    --auto-grid-min-size: 200px;
     display: grid;
-    grid-template-columns: repeat(3,200px);
+    grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
+    grid-gap: 20px;
+    margin-bottom: 2rem;
     grid-auto-rows: auto;
     justify-content: center;
-    grid-gap: 20px;
 }
 
 .lightbox .thumbnail {
     cursor: pointer;
 }
 
-.lightbox .thumbnail:hover img {
+.lightbox .thumbnail:focus,
+.lightbox .thumbnail:active,
+.lightbox .thumbnail:hover {
+    outline: none;
+    filter: drop-shadow(0 0 4mm rgb(207, 140, 200));
+}
+
+.lightbox .thumbnail:hover img,
+.lightbox .thumbnail:focus img,
+.lightbox .thumbnail:active img {
     transform: scale(1.5);
+    filter: drop-shadow(0 -6mm 4mm rgb(160, 0, 210));
 }
 
 .lightbox .thumbnail .img-container {

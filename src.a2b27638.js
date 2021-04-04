@@ -144,7 +144,7 @@ function getBundleURL() {
 }
 
 function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)?\/[^/]+(?:\?.*)?$/, '$1') + '/';
 }
 
 exports.getBundleURL = getBundleURLCached;
@@ -221,26 +221,55 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.fetchDrinksByName = fetchDrinksByName;
-exports.fetchDrinkById = fetchDrinkById;
 exports.fetchDrinksByIngredient = fetchDrinksByIngredient;
+exports.fetchDrinkDetailsByID = fetchDrinkDetailsByID;
 
 var _state = require("./state");
 
 function fetchDrinksByName() {
+  //const loader = document.getElementById(`loading`);
+  //loader.style.visibility = `visible`;
   const url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${_state.state.searchTerm}`;
-  return fetch(url).then(res => res.json()).then(data => data.drinks).catch(error => console.error(error));
-}
-
-function fetchDrinkById(id) {
-  const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
-  return fetch(url).then(res => res.json()).then(data => data.drinks).catch(error => console.error(error));
+  return fetch(url).then(res => res.json()).then(data => {
+    //loader.style.visibility = `hidden`;
+    return data.drinks;
+  }).catch(error => console.error(error));
 }
 
 function fetchDrinksByIngredient() {
+  //const loader = document.getElementById(`loading`);
+  //loader.style.visibility = `visible`;
   const url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${_state.state.searchTerm}`;
-  return fetch(url).then(res => res.json()).then(data => data.drinks).catch(error => console.error(error));
+  return fetch(url).then(res => res.json()).then(data => {
+    //loader.style.visibility = `hidden`;
+    return data.drinks;
+  }).catch(error => {
+    console.error(error);
+    return error;
+  });
 }
-},{"./state":"src/state.js"}],"src/components/modal/index.css":[function(require,module,exports) {
+
+function fetchDrinkDetailsByID(id) {
+  //const loader = document.getElementById(`loading`);
+  //loader.style.visibility = `visible`;
+  const url = `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`;
+  return fetch(url).then(res => res.json()).then(data => {
+    //loader.style.visibility = `hidden`;
+    return data;
+  }).catch(error => console.error(error));
+}
+},{"./state":"src/state.js"}],"src/helpers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.sleep = sleep;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+},{}],"src/components/modal/index.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -258,21 +287,29 @@ var _state = require("../../state");
 
 var _data = require("../../data");
 
+var _helpers = require("../../helpers");
+
 require("./index.css");
 
 function modal() {
   let markup = `
-    <div id="overlay">
+    <div id="overlay" aria-hidden="false" aria-describedby='modalDescription'>
+    <p class='screen-reader-text' id='modalDescription'>This is a pop-up modal which overlays the main cocktail db search. The modal contains additional information on the selected cocktail. Pressing the Close button at the bottom of the modal will close the modal and bring you back to where you were on the page.</p>
         <div id="modal">
             <article>
-                <h3></h3>
-                <img src="" alt="" />
-                <h5 class="ingredients-header">Ingredients</h5>
+                <h3 id="modal-header" tabindex="0"></h3>
+                <div class="img-container">
+                    <img src="" alt="" />
+                </div>
+                <h5>Ingredients</h5>
                 <ul class="ingredients"></ul>
-                <h5 class="instructions-header">Instructions</h5>
+                <h5>Instructions</h5>
                 <p class="instructions"></p>
             </article>
-            <button id="close" href="#">X</button>
+            <button id="close" href="#" aria-label="Close" tabindex="0">
+            <svg aria-hidden="true" viewBox="0 0 311 311.09867" xmlns="http://www.w3.org/2000/svg"><path d="m16.042969 311.097656c-4.09375 0-8.191407-1.554687-11.304688-4.691406-6.25-6.25-6.25-16.386719 0-22.636719l279.058594-279.058593c6.253906-6.253907 16.386719-6.253907 22.636719 0 6.25 6.25 6.25 16.382812 0 22.632812l-279.0625 279.0625c-3.136719 3.136719-7.230469 4.691406-11.328125 4.691406zm0 0"/><path d="m295.125 311.097656c-4.09375 0-8.191406-1.554687-11.304688-4.691406l-279.082031-279.082031c-6.25-6.253907-6.25-16.386719 0-22.636719s16.382813-6.25 22.632813 0l279.0625 279.082031c6.25 6.25 6.25 16.386719 0 22.636719-3.136719 3.136719-7.230469 4.691406-11.308594 4.691406zm0 0"/></svg>
+            </button>
+            <div id="modal-loading-container"><div id="heart-loading"><div></div></div></div>
         </div>
     </div>
     `;
@@ -280,20 +317,23 @@ function modal() {
 }
 
 async function updateModalContent() {
-  let drink = _state.state.drinks[_state.state.currentDrink];
-  console.log(drink);
+  document.querySelector(`.lightbox`).setAttribute(`aria-hidden`, `true`);
+  document.getElementById(`search`).setAttribute(`aria-hidden`, `true`);
+  const loader = document.getElementById(`modal-loading-container`);
+  loader.style.visibility = `visible`;
+  let drink = _state.state.currentDrink;
+  let instructions = drink.strInstructions;
 
-  if (_state.state.searchBy === `ingredient`) {
-    drink = await (0, _data.fetchDrinkById)(drink.idDrink);
-    drink = drink[0];
+  if (undefined === instructions) {
+    drink = await (0, _data.fetchDrinkDetailsByID)(drink.idDrink);
+    drink = drink.drinks[0];
   }
 
-  console.log(drink);
-  const title = drink.strDrink;
+  let title = drink.strDrink;
   const url = drink.strDrinkThumb;
   const ingredients = [];
   let ingredientsMarkup = ``;
-  const instructions = drink.strInstructions; // There are 15 objects to store ingredients in the json. Loop through.
+  instructions = drink.strInstructions; // There are 15 propteries to store ingredients in the drink obj. Loop through.
 
   for (let i = 1; i <= 15; i++) {
     const prop = `strIngredient` + i;
@@ -306,20 +346,23 @@ async function updateModalContent() {
   }
 
   for (const ingredient of ingredients) {
-    console.log(`${ingredient}`);
     ingredientsMarkup += `<li>${ingredient}</li>`;
-  } //console.log(ingredients);
+  }
 
-
+  const overlayEl = document.querySelector(`#overlay`);
+  overlayEl.dataset.idDrink = drink.idDrink;
   const titleEl = document.querySelector(`#modal h3`);
   const imageEl = document.querySelector(`#modal img`);
   const ingredientsEl = document.querySelector(`#modal .ingredients`);
   const instructionsEl = document.querySelector(`#modal .instructions`);
   titleEl.innerHTML = title;
   imageEl.src = url;
-  imageEl.alt = title;
+  imageEl.alt = title + ` Drink`;
   ingredientsEl.innerHTML = ingredientsMarkup;
   instructionsEl.innerHTML = instructions;
+  await (0, _helpers.sleep)(500);
+  loader.style.visibility = `hidden`;
+  document.getElementById(`modal-header`).focus();
 }
 
 function open() {
@@ -330,8 +373,14 @@ function open() {
 }
 
 function close() {
+  document.querySelector(`.lightbox`).setAttribute(`aria-hidden`, `false`);
+  document.getElementById(`search`).setAttribute(`aria-hidden`, `false`);
   const overlay = document.querySelector(`#overlay`);
+  document.querySelector(`.lightbox .thumbnail`).removeEventListener(`focus`, keepFocusInModal);
+  document.querySelector(`#search input, #search select`).removeEventListener(`focus`, keepFocusInModal);
   overlay.remove();
+  console.log(overlay.dataset.idDrink, `.lightbox .drink-${overlay.dataset.idDrink}`);
+  document.querySelector(`.lightbox .drink-${overlay.dataset.idDrink}`).focus();
 }
 
 function init() {
@@ -339,19 +388,25 @@ function init() {
   closeBtn.addEventListener(`click`, close);
   const overlay = document.querySelector(`#overlay`);
   overlay.addEventListener(`click`, handleCloseClick);
-  document.addEventListener("keyup", handleKeys);
+  document.addEventListener(`keydown`, handleKeys);
+  document.querySelector(`.lightbox .thumbnail`).addEventListener(`focus`, keepFocusInModal);
+  document.querySelector(`#search input, #search select`).addEventListener(`focus`, keepFocusInModal);
 }
 
 function handleCloseClick(event) {
-  if (event.target.id == "overlay") {
+  if (event.target.id == `overlay`) {
     close();
   }
 }
 
 function handleKeys(event) {
-  if (event.key === "Escape") close();
+  if (event.key === `Escape`) close();
 }
-},{"../../state":"src/state.js","../../data":"src/data.js","./index.css":"src/components/modal/index.css"}],"src/components/lightbox/index.css":[function(require,module,exports) {
+
+function keepFocusInModal() {
+  document.getElementById(`close`).focus();
+}
+},{"../../state":"src/state.js","../../data":"src/data.js","../../helpers":"src/helpers.js","./index.css":"src/components/modal/index.css"}],"src/components/lightbox/index.css":[function(require,module,exports) {
 var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
@@ -373,14 +428,14 @@ var _modal = require("../modal");
 require("./index.css");
 
 function lightbox() {
-  let markup = `<div class="lightbox">`;
+  let markup = `<div class="lightbox" aria-hidden="false">`;
 
-  _state.state.drinks.forEach(drink => {
+  _state.state.drinks.forEach((drink, i) => {
     const url = drink.strDrinkThumb;
     const title = drink.strDrink;
-    markup += `<div class="thumbnail">
+    markup += `<div class="thumbnail drink-${drink.idDrink}" tabindex="0" data-drink-key="${i}">
             <div class="img-container">
-                <img src="${url}" alt="${title}" />
+                <img src="${url}" alt="${title + ` Drink`}" />
             </div>
             <h6>${title}</h6>
         </div>`;
@@ -391,24 +446,31 @@ function lightbox() {
 }
 
 function init() {
-  const drinks = Array.from(document.querySelectorAll(`.lightbox img`));
+  const drinks = Array.from(document.querySelectorAll(`.lightbox .thumbnail`));
   drinks.forEach(drink => {
     drink.addEventListener(`click`, openLightbox);
+    drink.addEventListener(`keypress`, openLightbox);
   });
 }
 
 function openLightbox(e) {
   e.preventDefault();
-  const currentDrinkIndex = getCurrentDrinkIndex(event.target);
+
+  if (undefined !== e.key && `Enter` !== e.key) {
+    return;
+  }
+
+  let el = e.target;
+
+  if (!el.classList.contains(`thumbnail`)) {
+    el = el.closest(`.thumbnail`);
+  }
+
+  const currentDrinkIndex = _state.state.drinks[parseInt(el.dataset.drinkKey)];
+
   (0, _state.setState)(`currentDrink`, currentDrinkIndex);
   console.log(_state.state.currentDrink);
   (0, _modal.open)();
-}
-
-function getCurrentDrinkIndex(drink) {
-  const drinks = Array.from(document.querySelectorAll(`.lightbox img`));
-  let currentDrinkIndex = drinks.map(img => img.outerHTML).findIndex(img => img == drink.outerHTML);
-  return currentDrinkIndex;
 }
 
 function clearLightbox() {
@@ -430,6 +492,8 @@ var _state = require("../../state");
 
 var _data = require("../../data");
 
+var _helpers = require("../../helpers");
+
 var _lightbox = _interopRequireWildcard(require("../lightbox"));
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -442,30 +506,40 @@ function init() {
 }
 
 function search() {
+  // Render app HTML.
   return `
         <h1>Find Your Cocktail 🍸</h1>
-        <form name="search" id="search">
+        <form name="search" id="search" aria-hidden="false">
             <input id="search-field" name="search-term" type="search" placeholder="Search here..." />
             <select id="search-select" name="search-type">
-                <option value="name">By Cocktail Name</option>
+                <option value="name" selected>By Cocktail Name</option>
                 <option value="ingredient">By Ingredient</option>
             </select>
             <input class="button-primary" type="submit" id="submit" value="Search Cocktails" />
         </form>
+        <div id="loading-container"><div id="heart-loading"><div></div></div></div>
     `;
 }
 
 async function doSearch(e) {
+  // Prevent default form submit behaviour.
   e.preventDefault();
+  const termVal = document.getElementById(`search-field`).value.toLowerCase();
+  const typeVal = document.getElementById(`search-select`).value.toLowerCase();
+
+  if (`` === termVal || termVal === _state.state.searchTerm && typeVal === _state.state.searchBy) {
+    return;
+  }
+
+  (0, _state.setState)(`searchTerm`, termVal);
+  (0, _state.setState)(`searchBy`, typeVal);
+  let drinks = {};
   (0, _lightbox.clearLightbox)();
   clearNoResults();
-  const term = document.getElementById(`search-field`).value.toLowerCase();
-  const type = document.getElementById(`search-select`).value.toLowerCase();
-  (0, _state.setState)(`searchTerm`, term);
-  (0, _state.setState)(`searchBy`, type);
-  let drinks = {};
+  const loader = document.getElementById(`loading-container`);
+  loader.style.visibility = `visible`;
 
-  if (`name` === type) {
+  if (`name` === typeVal) {
     drinks = await (0, _data.fetchDrinksByName)();
   } else {
     drinks = await (0, _data.fetchDrinksByIngredient)();
@@ -473,23 +547,24 @@ async function doSearch(e) {
 
   (0, _state.setState)(`drinks`, drinks);
 
-  if (_state.state.drinks === null || _state.state.drinks === undefined) {
+  if (_state.state.drinks === null || _state.state.drinks === undefined || _state.state.drinks instanceof Error) {
     const markup = `<h4 class="no-results">There are no results for <strong>${_state.state.searchTerm}</strong> when searching for cocktails by ${_state.state.searchBy}.</h4>`;
     document.getElementById(`app`).insertAdjacentHTML(`beforeend`, markup);
-    (0, _state.setState)(`searchTerm`, null);
-    document.getElementById(`search-field`).value = _state.state.searchTerm;
   } else {
     const markup = (0, _lightbox.default)();
     document.getElementById(`app`).insertAdjacentHTML(`beforeend`, markup);
     (0, _lightbox.init)();
   }
+
+  await (0, _helpers.sleep)(500);
+  loader.style.visibility = `hidden`;
 }
 
 function clearNoResults() {
   const noResults = document.querySelector(`.no-results`);
   if (noResults) noResults.remove();
 }
-},{"./index.css":"src/components/search/index.css","../../state":"src/state.js","../../data":"src/data.js","../lightbox":"src/components/lightbox/index.js"}],"src/index.js":[function(require,module,exports) {
+},{"./index.css":"src/components/search/index.css","../../state":"src/state.js","../../data":"src/data.js","../../helpers":"src/helpers.js","../lightbox":"src/components/lightbox/index.js"}],"src/index.js":[function(require,module,exports) {
 "use strict";
 
 require("./index.css");
@@ -535,7 +610,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "56508" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "53962" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
