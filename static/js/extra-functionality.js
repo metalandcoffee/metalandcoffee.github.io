@@ -1,62 +1,60 @@
-function $(target){ 
+const DEFAULT_BG = "/static/media/pointing-at-map.mp4";
+const SUNNY_BG = "/static/media/sunny.mp4";
+const SNOWY_BG = "/static/media/snowy.mp4";
+const CLOUDY_BG = "/static/media/slightly-cloudy.mp4";
+const RAINY_BG = "/static/media/rainy.mp4"
+let backgroundVideo;
+function $(target) {
     return document.querySelector(target);
 }
-function $$(target){ 
+function $$(target) {
     return document.querySelectorAll(target);
 }
-function identifyWeatherFromForecastString(forecast){ 
-    let weather = "";
-    if (forecast.includes('clouds')){ 
-
-    }
-    if (forecast.includes('clear sky')){ 
-        weather = "sun";
-    }
-
+function createBackgroundVideo() {
+    backgroundVideo = document.createElement('video');
+    backgroundVideo.src = DEFAULT_BG;
+    backgroundVideo.muted = true;
+    backgroundVideo.loop = true;
+    backgroundVideo.style.opacity = 0.1;
+    backgroundVideo.style.position = "fixed";
+    backgroundVideo.style.top = "0";
+    backgroundVideo.style.left = "0";
+    backgroundVideo.style.zIndex = -10;
+    backgroundVideo.style.height = "100%";
+    backgroundVideo.style.minHeight = "100vh";
+    $('body').appendChild(backgroundVideo);
+    backgroundVideo.play();
 }
-function changeBackgroundToCurrentWeather(weather){ 
-    let backgroundToUse = "";
-    if (weather == "clouds"){
-        backgroundToUse = "";
+function changeBackgroundToCurrentWeather(forecast) {
+    let backgroundToUse = DEFAULT_BG;
+    if (forecast.includes("clouds")) {
+        backgroundToUse = CLOUDY_BG;
     }
-    if (weather == "rain"){
-        backgroundToUse = "";
+    if (forecast == "rain") {
+        backgroundToUse = RAINY_BG;
     }
-    if (weather == "sun"){
-        backgroundToUse = "";
+    if (forecast.includes('clear sky')) {
+        backgroundToUse = SUNNY_BG;
     }
-    if (weather == "snow"){
-        backgroundToUse = "";
+    if (forecast == "snow") {
+        backgroundToUse = SNOWY_BG;
     }
+    backgroundVideo.src = backgroundToUse;
+    backgroundVideo.play();
 }
-function listenForForecastContentChanges(changesList, observerObj){ 
-    let forecastTextElement = changesList[changesList.length-1].target;
+function listenForForecastContentChanges(changesList, observerObj) {
+    console.log('change');
+    console.log(changesList);
+    let forecastTextElement = changesList[changesList.length - 1].target;
     let forecast = forecastTextElement.textContent;
-    let weather = identifyWeatherFromForecastString(forecast);
-    changeBackgroundToCurrentWeather(weather); 
+    changeBackgroundToCurrentWeather(forecast);
 }
+createBackgroundVideo();
 let forecastDiv = $('.kJagFs');
 let forecastObserver = new MutationObserver(listenForForecastContentChanges)
-forecastObserver.observe(forecastDiv,{attributes: true, childList: true, subtree: true})
-let video = document.createElement('video');
-video.src = "/static/media/Sunny.mp4";
-video.muted = true;
-video.loop = true;
-video.style.opacity = 0.2;
-video.style.position = "fixed";
-video.style.top = "0";
-video.style.left = "0";
-video.style.zIndex = -10;
-video.style.height = "100%";
-video.style.minHeight = "100vh";
-$('body').appendChild(video);
-video.play();
-//$('body').style.background = "purple url('/static/media/clouds.png')"
-
-/*
-$('.kJagFs').addEventListener('', event=>{ 
-    console.log(event);
-    console.log($('.kJagFs').textContent)
-}) 
-*/
-
+forecastObserver.observe($('p'), { 
+    characterData: true, 
+    attributes: true, 
+    childList: true, 
+    subtree: true 
+})
