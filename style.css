@@ -73,6 +73,7 @@ a {
 
 .overlay {
 	background-color: rgba(0, 0, 0, 0.1);
+	-webkit-backdrop-filter: blur(28px);
 	backdrop-filter: blur(28px);
 	position: absolute;
 	top: 0;
