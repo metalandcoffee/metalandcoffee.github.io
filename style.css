@@ -12,7 +12,7 @@ body {
 	color: var(--white);
 	background-color: var(--purple);
 	background-image: url("bkgd.png");
-	background-position: center;
+	background-position: bottom right;
 	background-repeat: no-repeat;
 	background-size: cover;
 	font-family: "Raleway", sans-serif;
@@ -72,12 +72,21 @@ a {
 }
 
 .overlay {
-	backdrop-filter: blur(11px);
+	background-color: rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(28px);
 	position: absolute;
-	background-color: rgba(0, 0, 0, 0.2);
 	top: 0;
 	bottom: 0;
 	right: 0;
+	left: 0;
+}
+
+.overlay-2 {
+	background-color: rgba(256, 256, 256, 0.07);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 50%;
 	left: 0;
 }
 
