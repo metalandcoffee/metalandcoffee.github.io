@@ -111,14 +111,10 @@ a {
 	margin: 0;
 }
 
-.branding img {
-	width: 375px;
-	height: 94px;
-}
-
 .socials {
 	list-style: none;
 	padding: 0;
+	margin: 0;
 }
 
 .button {
@@ -140,6 +136,10 @@ li:nth-child(even) .button {
 	background-color: transparent;
 }
 
+li:last-child .button {
+	margin: 0;
+}
+
 .button:hover {
 	background-color: transparent;
 	border-color: var(--dark-pink);
@@ -151,15 +151,6 @@ li:nth-child(even) .button:hover {
 }
 
 @media (min-width: 768px) {
-	h2 {
-		font-size: 4.2rem;
-		line-height: 1.35;
-	}
-
-	.bio {
-		display: block;
-	}
-
 	.content {
 		display: flex;
 		flex-direction: row;
@@ -167,9 +158,31 @@ li:nth-child(even) .button:hover {
 		height: 600px;
 	}
 
+	.overlay-2 {
+		right: 162px;
+	}
+
 	.webtoon-container {
 		order: 2;
 		grid-template-columns: 450px;
+	}
+
+	.content-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: end;
+		text-align: left;
+	}
+}
+
+@media (min-width: 1024px) {
+	h2 {
+		font-size: 2.6rem;
+		line-height: 1.35;
+	}
+
+	.bio {
+		display: block;
 	}
 
 	.content-container {
