@@ -16,7 +16,6 @@ body {
 	background-color: var(--purple);
 	margin: 0;
 	position: relative;
-	padding: 100px 0;
 }
 
 h1,
@@ -66,6 +65,8 @@ a {
 	background-position: bottom right;
 	background-repeat: no-repeat;
 	background-size: cover;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
 }
 
 .bio {
@@ -152,9 +153,8 @@ li:nth-child(even) .button:hover {
 }
 
 @media (min-width: 768px) {
-	#main {
-		padding-top: 2rem;
-		padding-bottom: 2rem;
+	body {
+		padding: 100px 0;
 	}
 
 	.content {
