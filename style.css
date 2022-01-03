@@ -2,6 +2,8 @@
 	--purple: #16111c;
 	--white: #fff;
 	--pink: #de6992;
+	--dark-pink: #cd4a78;
+	--grey: #c7c6c6;
 }
 
 html {
@@ -24,8 +26,9 @@ h5,
 h6 {
 	font-family: "Rajdhani", sans-serif;
 	font-weight: 500;
+	line-height: 1;
 	margin-top: 0;
-	margin-bottom: 1rem;
+	margin-bottom: 2rem;
 }
 
 h1 {
@@ -37,9 +40,9 @@ h2 {
 }
 
 h3 {
-	font-family: "Raleway", sans-serif;
-	font-size: 1.25rem;
-	line-height: 1.3;
+	color: var(--grey);
+	font-size: 1.1rem;
+	line-height: 1.7;
 }
 
 img {
@@ -66,10 +69,12 @@ a {
 
 .bio {
 	display: none;
+	font-family: "Raleway", sans-serif;
+	font-weight: 200;
 }
 
 .content {
-	position: relative;
+	padding: 0;
 }
 
 .webtoon-container {
@@ -94,7 +99,7 @@ a {
 }
 
 .overlay-2 {
-	background-color: rgba(256, 256, 256, 0.07);
+	background-color: rgba(256, 256, 256, 0.1);
 	position: absolute;
 	top: 0;
 	bottom: 0;
@@ -103,7 +108,7 @@ a {
 }
 
 .branding {
-	margin-top: 0;
+	margin: 0;
 }
 
 .branding img {
@@ -120,23 +125,35 @@ a {
 	font-size: 1.24rem;
 	text-transform: uppercase;
 	display: block;
+	line-height: 1;
 	border-radius: 9px;
 	font-family: "Rajdhani", sans-serif;
 	background-color: var(--pink);
 	border: 1px solid var(--pink);
 	text-align: center;
-	padding: 1rem 1.25rem;
+	padding: 1rem 2.5rem;
 	margin-bottom: 1rem;
 	transition: all 0.3s;
 }
 
+li:nth-child(even) .button {
+	background-color: transparent;
+}
+
 .button:hover {
 	background-color: transparent;
+	border-color: var(--dark-pink);
+}
+
+li:nth-child(even) .button:hover {
+	background-color: var(--dark-pink);
+	border-color: var(--dark-pink);
 }
 
 @media (min-width: 768px) {
 	h2 {
 		font-size: 4.2rem;
+		line-height: 1.35;
 	}
 
 	.bio {
@@ -147,6 +164,7 @@ a {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+		height: 600px;
 	}
 
 	.webtoon-container {
@@ -161,6 +179,7 @@ a {
 
 	.socials li {
 		display: inline-block;
+		margin-right: 0.5rem;
 	}
 
 	.overlay-2 {
