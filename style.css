@@ -66,8 +66,6 @@ a {
 	background-position: bottom right;
 	background-repeat: no-repeat;
 	background-size: cover;
-	padding-top: 2rem;
-	padding-bottom: 2rem;
 }
 
 .bio {
@@ -154,6 +152,11 @@ li:nth-child(even) .button:hover {
 }
 
 @media (min-width: 768px) {
+	#main {
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+
 	.content {
 		display: flex;
 		flex-direction: row;
