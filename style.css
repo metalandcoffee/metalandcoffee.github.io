@@ -1,0 +1,207 @@
+:root {
+	--purple: #16111c;
+	--white: #fff;
+	--pink: #de6992;
+	--dark-pink: #cd4a78;
+	--grey: #c7c6c6;
+}
+
+html {
+	font-size: 100%;
+}
+
+body {
+	font-family: "Raleway", sans-serif;
+	color: var(--white);
+	background-color: var(--purple);
+	margin: 0;
+	position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: "Rajdhani", sans-serif;
+	font-weight: 500;
+	line-height: 1;
+	margin-top: 0;
+	margin-bottom: 2rem;
+}
+
+h1 {
+	font-size: 2.5rem;
+}
+
+h2 {
+	font-size: 1.75rem;
+}
+
+h3 {
+	color: var(--grey);
+	font-size: 1.1rem;
+	line-height: 1.7;
+}
+
+img {
+	width: 100%;
+	height: auto;
+}
+
+section {
+	position: relative;
+	padding: 1rem;
+}
+
+a {
+	text-decoration: none;
+	color: var(--white);
+}
+
+#main {
+	background-image: url("bkgd.png");
+	background-position: bottom right;
+	background-repeat: no-repeat;
+	background-size: cover;
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+
+.bio {
+	display: none;
+	font-family: "Raleway", sans-serif;
+	font-weight: 200;
+}
+
+.content {
+	padding: 0;
+}
+
+.webtoon-container {
+	display: grid;
+	grid-template-columns: 200px;
+	justify-content: center;
+}
+
+.content-container {
+	text-align: center;
+}
+
+.overlay {
+	background-color: rgba(0, 0, 0, 0.1);
+	-webkit-backdrop-filter: blur(28px);
+	backdrop-filter: blur(28px);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+}
+
+.overlay-2 {
+	background-color: rgba(256, 256, 256, 0.1);
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 50%;
+	left: 0;
+}
+
+.branding {
+	margin: 0;
+}
+
+.socials {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.button {
+	font-size: 1.24rem;
+	text-transform: uppercase;
+	display: block;
+	line-height: 1;
+	border-radius: 9px;
+	font-family: "Rajdhani", sans-serif;
+	background-color: var(--pink);
+	border: 1px solid var(--pink);
+	text-align: center;
+	padding: 1rem 2.5rem;
+	margin-bottom: 1rem;
+	transition: all 0.3s;
+}
+
+li:nth-child(even) .button {
+	background-color: transparent;
+}
+
+li:last-child .button {
+	margin: 0;
+}
+
+.button:hover {
+	background-color: transparent;
+	border-color: var(--dark-pink);
+}
+
+li:nth-child(even) .button:hover {
+	background-color: var(--dark-pink);
+	border-color: var(--dark-pink);
+}
+
+@media (min-width: 768px) {
+	body {
+		padding: 100px 0;
+	}
+
+	.content {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		height: 600px;
+	}
+
+	.overlay-2 {
+		right: 162px;
+	}
+
+	.webtoon-container {
+		order: 2;
+		grid-template-columns: 462px;
+	}
+
+	.content-container {
+		display: flex;
+		flex-direction: column;
+		justify-content: end;
+		text-align: left;
+	}
+}
+
+@media (min-width: 1024px) {
+	h2 {
+		font-size: 2.6rem;
+		line-height: 1.35;
+	}
+
+	.bio {
+		display: block;
+	}
+
+	.content-container {
+		width: 700px;
+		text-align: left;
+	}
+
+	.socials li {
+		display: inline-block;
+		margin-right: 0.5rem;
+	}
+
+	.overlay-2 {
+		right: 440px;
+	}
+}
