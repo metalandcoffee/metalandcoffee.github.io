@@ -152,6 +152,63 @@ li:nth-child(even) .button:hover {
 	border-color: var(--dark-pink);
 }
 
+.mixtape-footer{
+	display: none;
+	position: absolute;
+	left: 58%;
+	margin-top: -95px;
+	cursor: pointer;
+	transition: 280ms ease-in-out;
+}
+
+.mixtape-footer:hover{
+	transition: 280ms ease-in-out;
+	transform: scale(1.03);
+}
+
+.mixtape-footer::before{
+	content:"Check out my latest metal mixtape!";
+	position: absolute;
+	top: 0;
+	left: 20px;
+	font-weight: bold;
+	margin-top: -70px;
+	transition: 280ms ease-in-out;
+	opacity: 0;
+}
+
+.mixtape-footer:hover::before{
+	margin-top: -10px;
+	transition: 280ms ease-in-out;
+	opacity: 1;
+}
+
+.mixtape-footer .cassette{
+	width: 300px;
+	box-shadow: 0px 0px 8px #310d31;
+	border-radius: 10px;
+}
+.mixtape-footer .cassette-circle{
+	height: 30px;
+	width: 30px;
+	position: absolute;
+	left:0;
+	top:27.05%;
+	animation: spin 2s infinite linear
+}
+.mixtape-footer .cassette-circle.one{
+	left: 60.47%;
+}
+.mixtape-footer .cassette-circle.two{
+	left: 28.63%;
+}
+
+@keyframes spin{ 
+	100% { 
+		transform: rotate(360deg)
+	}
+}
+
 @media (min-width: 768px) {
 	body {
 		padding: 100px 0;
@@ -178,6 +235,9 @@ li:nth-child(even) .button:hover {
 		flex-direction: column;
 		justify-content: end;
 		text-align: left;
+	}
+	.mixtape-footer{
+		display: block;
 	}
 }
 
