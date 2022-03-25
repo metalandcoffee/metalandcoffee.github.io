@@ -31,9 +31,7 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Install & run serve
-        run: |
-          npm ci
-          npm install serve -g && serve & npx wait-on http://localhost:3000
+        run: npm install serve -g && serve & npx wait-on http://localhost:3000
 
       - name: Run Accessibility Tool
         run: |
