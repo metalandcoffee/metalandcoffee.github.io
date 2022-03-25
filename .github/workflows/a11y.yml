@@ -24,6 +24,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+      - uses: nanasess/setup-chromedriver@v1
+      - run: |
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
       - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
@@ -37,9 +42,3 @@ jobs:
         run: |
           npm install -g @axe-core/cli
           axe http://localhost:3000 --browser chrome --verbose --show-errors
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.

@@ -9,6 +9,8 @@ For security reasons, modern browsers won't load resource from locally running H
 
 The easiest way to get a modern browser to load and run JavaScript files in local HTML files is to run a local web server.
 
+## Github Actions
+a11y currently not working. Look into setup-chromedriver action. https://github.com/marketplace/actions/setup-chromedriver
 ## Contributors
 
 <a href="https://github.com/metalandcoffee/metalandcoffee.github.io/graphs/contributors">
