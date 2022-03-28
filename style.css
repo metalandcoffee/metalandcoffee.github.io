@@ -61,6 +61,7 @@ svg {
 
 svg:hover {
 	fill: var(--dark-pink);
+	filter: drop-shadow(0px 4px 4px rgba(255, 255, 255, 0.27));
 }
 
 h1 {
