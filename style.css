@@ -127,4 +127,11 @@ video {
 		width: 30px;
 		height: 30px;
 	}
+
+	ul {
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-rows: 1fr 1fr;
+		grid-row-gap: 16px;
+	}
 }
