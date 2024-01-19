@@ -35,10 +35,6 @@ h6 {
 	margin-bottom: 2rem;
 }
 
-h2 {
-	font-size: 3rem;
-}
-
 ul {
 	list-style: none;
 	display: flex;
@@ -63,8 +59,8 @@ svg,
 }
 
 .big-logo {
-	width: 100px;
-	height: 100px;
+	width: 150px;
+	height: 150px;
 	transition: all 0.2s linear;
 }
 
@@ -136,11 +132,19 @@ video {
 	h1 {
 		font-size: 5rem;
 	}
+
+	h2 {
+		font-size: 3rem;
+	}
 }
 
 @media only screen and (max-width: 768px) {
 	h1 {
 		font-size: 3rem;
+	}
+
+	h2 {
+		font-size: 2rem;
 	}
 
 	video {
