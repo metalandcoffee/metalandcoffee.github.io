@@ -53,6 +53,7 @@ a {
 
 a.primary {
 	align-self: start;
+	justify-self: center;
 }
 
 svg,
