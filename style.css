@@ -60,6 +60,7 @@ svg,
 .big-logo {
 	width: 100px;
 	height: 100px;
+	align-self: start;
 }
 
 svg {
@@ -106,6 +107,7 @@ video {
 
 .band-promo {
 	margin: 0;
+	align-self: end;
 }
 
 .screen-reader-only {
