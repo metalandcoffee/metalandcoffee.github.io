@@ -170,7 +170,8 @@ video,
 	.playlists {
 		flex-direction: column;
 		display: flex;
-		margin-bottom: 0.5rem;
+		gap: 1rem;
+		margin: 0 1rem 2rem 1rem;
 	}
 
 	iframe {
